@@ -47,7 +47,7 @@ class MX_US_Translator
         <div id="google_translate_element" style="display:none;"></div>
 
         <div id="mx-us-toggle-container">
-            <div class="mx-us-toggle-wrapper">
+<div class="mx-us-toggle-wrapper notranslate">
                 <div class="mx-us-option" data-lang="es" title="Español (México)">
                     <span class="flag-icon flag-mx"></span>
                     <span class="lang-label">ES</span>

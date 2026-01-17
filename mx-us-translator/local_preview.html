@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MX-US Translator Plugin Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Simulation of WordPress wp_head -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 50px;
+            line-height: 1.6;
+        }
+
+        .preview-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .note {
+            background: #f0f0f0;
+            padding: 10px;
+            border-left: 4px solid #0073aa;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="preview-content">
+        <div class="note">
+            <strong>Antigravity Preview Environment:</strong> This page simulates how the plugin behaves on a WordPress
+            site.
+        </div>
+
+        <h1>Welcome to the Translate-ID Test Page</h1>
+        <p>This content is in English. Use the toggle below to switch to Spanish (Mexico).</p>
+
+        <h2>Sample Content</h2>
+        <p>WordPress is open source software you can use to create a beautiful website, blog, or app.</p>
+        <p>Beautiful designs, powerful features, and the freedom to build anything you want. WordPress is both free and
+            priceless at the same time.</p>
+    </div>
+
+    <!-- Plugin Footer Output (Simulated) -->
+    <div id="google_translate_element" style="display:none;"></div>
+
+    <div id="mx-us-toggle-container">
+        <div class="mx-us-toggle-wrapper notranslate">
+            <div class="mx-us-option" data-lang="es" title="Español (México)">
+                <span class="flag-icon flag-mx"></span>
+                <span class="lang-label">ES</span>
+            </div>
+            <div class="mx-us-divider">|</div>
+            <div class="mx-us-option" data-lang="en" title="English (USA)">
+                <span class="flag-icon flag-us"></span>
+                <span class="lang-label">EN</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plugin Scripts -->
+    <script src="script.js"></script>
+    <script type="text/javascript"
+        src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+
+</html>

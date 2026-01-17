@@ -5,12 +5,24 @@
  */
 
 /* Hide Google Translate Toolbar */
-.goog-te-banner-frame.skiptranslate {
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+.skiptranslate.goog-te-gadget,
+#goog-gt-tt,
+iframe.goog-te-banner-frame {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
 }
 
 body {
     top: 0px !important;
+}
+
+/* Ensure no other google elements shift layout */
+.goog-te-spinner-pos,
+.goog-tooltip {
+    display: none !important;
 }
 
 #google_translate_element {

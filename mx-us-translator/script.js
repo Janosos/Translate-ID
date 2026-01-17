@@ -65,5 +65,36 @@ function googleTranslateElementInit() {
             // Reload page to apply
             window.location.reload();
         });
+
+        // Force hide Google Translate top bar
+        // Google checks and resets this sometimes, so we enforce it.
+        $('body').css('top', '0px');
+
+        // Use an observer or interval to ensure it stays hidden if injected asynchronously
+        var checkBanner = setInterval(function () {
+            var iframe = $('.goog-te-banner-frame');
+            // Try to find by ID if class is missing but structure matches
+            if (!iframe.length) {
+                iframe = $('iframe[id*=".container"]');
+            }
+
+            if (iframe.length) {
+                iframe.hide();
+                iframe.css('visibility', 'hidden');
+                iframe.css('height', '0');
+                $('body').css('top', '0px');
+                $('body').css('position', 'static');
+            }
+            // Also target the new skiptranslate banner if present
+            $('.skiptranslate').each(function () {
+                if ($(this).text().indexOf('Translate') > -1) {
+                    // Often the banner is a direct child of body
+                    if ($(this).parent().is('body')) {
+                        $(this).hide();
+                    }
+                }
+            });
+        }, 500);
+
     });
 })(jQuery);
