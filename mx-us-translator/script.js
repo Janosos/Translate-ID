@@ -78,9 +78,15 @@ function googleTranslateElementInit() {
             // If cookie exists, we already have a preference
             if (currentCookie) {
                 applyLangFromCookie(currentCookie);
-                // If it's not the default (English usually), show mask while it loads
-                if (!currentCookie.match(/\/en$/)) {
-                    showLoadingMask('es');
+                // Show mask for both languages to provide visual feedback/consistency
+                // Determine direction
+                var target = currentCookie.match(/\/es$/) ? 'es' : 'en';
+                showLoadingMask(target);
+
+                // For English (Source), the Google loop might not find a banner/class to trigger hide.
+                // So we force a hide after a short delay if it's English.
+                if (target === 'en') {
+                    setTimeout(hideLoadingMask, 1500);
                 }
                 return;
             }
@@ -144,25 +150,28 @@ function googleTranslateElementInit() {
                 $('body').css('top', '0px');
                 $('body').css('position', 'static');
 
-                // Once Google is hidden, we can hide our mask
-                hideLoadingMask();
+                // Once Google is hidden, wait a bit to ensure text repaints, then hide mask
+                setTimeout(hideLoadingMask, 1500);
             }
 
             // Fallback for safety: if translation finished class is present on html/body
             if ($('html').hasClass('translated-ltr') || $('html').hasClass('translated-rtl')) {
                 // If the iframe hasn't appeared yet but translation happened, hide mask soon
-                setTimeout(hideLoadingMask, 500);
+                setTimeout(hideLoadingMask, 1500);
             }
 
             $('.skiptranslate').each(function () {
                 if ($(this).text().indexOf('Translate') > -1) {
                     if ($(this).parent().is('body')) {
                         $(this).hide();
-                        hideLoadingMask();
+                        setTimeout(hideLoadingMask, 1500);
                     }
                 }
             });
         }, 500);
+
+        // Final safety net: Always hide mask after 5 seconds no matter what
+        setTimeout(hideLoadingMask, 5000);
 
     });
 })(jQuery);
