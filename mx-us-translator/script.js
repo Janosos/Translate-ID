@@ -21,16 +21,41 @@ function googleTranslateElementInit() {
             return v ? v[2] : null;
         }
 
-        // Helper to set cookie
-        function setCookie(name, value, days) {
-            var d = new Date;
-            d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
-            document.cookie = name + "=" + value + ";path=/;domain=" + window.location.hostname;
+        /**
+         * Robust Helper to delete cookie across multiple potential domains.
+         * This prevents 'googtrans' conflicts between www and root domains.
+         */
+        function deleteCookie(name) {
+            var hostname = window.location.hostname;
+            var domainParts = hostname.split('.');
+            var paths = ['/', '/wp-content/plugins/mx-us-translator/']; // Common paths
+
+            // Attempt to clear from current host and all parent domains
+            while (domainParts.length > 0) {
+                var domain = domainParts.join('.');
+                paths.forEach(function (path) {
+                    document.cookie = name + "=;path=" + path + ";domain=" + domain + ";expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                    document.cookie = name + "=;path=" + path + ";domain=." + domain + ";expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+                });
+                domainParts.shift();
+            }
+            // Final fallback for current path/host
+            document.cookie = name + "=;path=/;expires=Thu, 01 Jan 1970 00:00:00 UTC;";
         }
 
-        // Helper to delete cookie
-        function deleteCookie(name) {
-            document.cookie = name + "=;path=/;domain=" + window.location.hostname + ";expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+        // Helper to set cookie
+        function setCookie(name, value, days) {
+            // Always clean up siblings first to avoid conflicts
+            deleteCookie(name);
+
+            var d = new Date;
+            d.setTime(d.getTime() + 24 * 60 * 60 * 1000 * days);
+            var expires = ";expires=" + d.toUTCString();
+
+            // Set for root domain if possible (stripping www)
+            var domain = window.location.hostname.replace(/^www\./, '');
+            document.cookie = name + "=" + value + expires + ";path=/;domain=." + domain;
+            document.cookie = name + "=" + value + expires + ";path=/;domain=" + domain;
         }
 
         // Inject Toggle and Loading Mask HTML dynamically
@@ -128,10 +153,10 @@ function googleTranslateElementInit() {
             showLoadingMask(selectedLang);
 
             if (selectedLang === 'es') {
-                // Revert to native Spanish by clearing cookie
+                // Revert to native Spanish by clearing cookie robustly
                 deleteCookie('googtrans');
             } else {
-                // Translate to English
+                // Translate to English explicitly from Spanish
                 setCookie('googtrans', '/es/en', 30);
             }
 
